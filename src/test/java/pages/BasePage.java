@@ -45,4 +45,15 @@ public class BasePage {
                 .map(WebElement::getText)
                 .collect(Collectors.toList());
     }
+    protected void waitForVisibility(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    protected void waitForUrlContains(String value) {
+        wait.until(ExpectedConditions.urlContains(value));
+    }
+
+    protected void waitForTitleContains(String value) {
+        wait.until(ExpectedConditions.titleContains(value));
+    }
 }

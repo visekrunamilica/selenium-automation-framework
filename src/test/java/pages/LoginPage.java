@@ -34,6 +34,8 @@ public class LoginPage extends BasePage {
         enterUsername(username);
         enterPassword(password);
         clickLogin();
+        ProductsPage productsPage=new ProductsPage(driver);
+        productsPage.waitUntilOpened();
         return new ProductsPage(driver);
     }
 

@@ -32,6 +32,10 @@ public class ProductsPage extends BasePage {
         return getText(pageTitle);
     }
 
+    public void waitUntilOpened() {
+        waitForVisibility(pageTitle);
+    }
+
     public boolean isPageOpened() {
         return getPageTitle().equals("Products");
     }

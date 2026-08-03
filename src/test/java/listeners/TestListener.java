@@ -7,10 +7,18 @@ import utils.ScreenshotUtils;
 public class TestListener implements ITestListener {
 
     @Override
-    public void onTestFailure(ITestResult result) {
+    public void onTestStart(ITestResult result) {
+        System.out.println("TEST STARTED: " + result.getName());
+    }
 
-        ScreenshotUtils.takeScreenshot(
-                result.getName()
-        );
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        System.out.println("TEST PASSED: " + result.getName());
+    }
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+        System.out.println("TEST FAILED: " + result.getName());
+        ScreenshotUtils.takeScreenshot(result.getName());
     }
 }

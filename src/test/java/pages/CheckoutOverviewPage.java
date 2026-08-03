@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class CheckoutOverviewPage extends BasePage {
 
@@ -21,7 +22,7 @@ public class CheckoutOverviewPage extends BasePage {
     }
 
     public CheckoutCompletePage clickFinish() {
-        click(finishButton);
+        click(finishButton);waitForUrlContains("checkout-complete");
         return new CheckoutCompletePage(driver);
     }
 }
