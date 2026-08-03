@@ -10,7 +10,7 @@ public class LoginDataProvider {
         return new Object[][]{
                 {
                         new LoginTestData(
-                               UserFactory.getUserWithWrongPassword(),
+                                UserFactory.getUserWithWrongPassword(),
                                 ErrorMessage.WRONG_CREDENTIALS
                         )
                 },

@@ -40,6 +40,7 @@ public class CheckoutInformationPage extends BasePage {
         click(continueButton);
         return new CheckoutOverviewPage(driver);
     }
+
     public void checkoutAttempt(CheckoutInfo info) {
         enterCheckoutInfo(info);
         click(continueButton);

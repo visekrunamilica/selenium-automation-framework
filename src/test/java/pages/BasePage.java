@@ -39,7 +39,7 @@ public class BasePage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).isDisplayed();
     }
 
-    public List<String> getTexts(By locator) {
+    protected List<String> getTexts(By locator) {
         return driver.findElements(locator)
                 .stream()
                 .map(WebElement::getText)
