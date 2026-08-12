@@ -25,7 +25,6 @@ public class LoginTest extends BaseTest {
     )
     public void userCannotLogin(LoginTestData testData) {
         loginPage.loginAttempt(testData.getUser());
-
         Assert.assertTrue(loginPage.hasErrorMessage(testData.getErrorMessage()));
     }
 }

@@ -28,16 +28,12 @@ public class ProductsPage extends BasePage {
         super(driver);
     }
 
-    public String getPageTitle() {
-        return getText(pageTitle);
-    }
-
     public void waitUntilOpened() {
-        waitForVisibility(pageTitle);
+        waitUntilVisible(pageTitle);
     }
 
     public boolean isPageOpened() {
-        return getPageTitle().equals("Products");
+        return isPageTitle(pageTitle,"Products");
     }
 
     public void addProductToCart(Product product) {
@@ -54,7 +50,7 @@ public class ProductsPage extends BasePage {
     }
 
     public Product getProduct(String productName) {
-        List<WebElement> products = driver.findElements(productCards);
+        List<WebElement> products = getElements(productCards);
         for (WebElement product : products) {
             String name = product.findElement(productNameLocator).getText();
             if (name.trim().equalsIgnoreCase(productName)) {

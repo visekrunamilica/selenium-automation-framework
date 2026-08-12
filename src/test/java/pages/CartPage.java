@@ -48,7 +48,7 @@ public class CartPage extends BasePage {
     }
 
     public Product getProduct(String productName) {
-        List<WebElement> products = driver.findElements(cartProductCards);
+        List<WebElement> products = getElements(cartProductCards);
         for (WebElement productCard : products) {
             String name = productCard.findElement(cartProductNameLocator).getText();
             if (name.trim().equalsIgnoreCase(productName)) {

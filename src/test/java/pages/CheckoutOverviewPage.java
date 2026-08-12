@@ -13,16 +13,16 @@ public class CheckoutOverviewPage extends BasePage {
         super(driver);
     }
 
-    public String getPageTitle() {
-        return getText(pageTitle);
-    }
-
     public boolean isPageOpened() {
-        return getPageTitle().equals("Checkout: Overview");
+        return isPageTitle(pageTitle, "Checkout: Overview");
     }
 
     public CheckoutCompletePage clickFinish() {
         click(finishButton);waitForUrlContains("checkout-complete");
         return new CheckoutCompletePage(driver);
+    }
+
+    public void waitUntilOpened() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle));
     }
 }

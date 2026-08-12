@@ -3,6 +3,7 @@ package base;
 import config.ConfigReader;
 import data.UserFactory;
 import listeners.TestListener;
+import models.User;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -23,10 +24,13 @@ public class BaseTest {
         loginPage = new LoginPage(driver);
     }
 
-    protected ProductsPage loginAsStandardUser() {
-        return loginPage.login(UserFactory.getStandardUser());
+    protected ProductsPage login(User user) {
+        return loginPage.login(user);
     }
 
+    protected ProductsPage loginAsStandardUser() {
+        return login(UserFactory.getStandardUser());
+    }
 
     @AfterMethod
     public void tearDown() {

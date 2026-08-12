@@ -38,6 +38,8 @@ public class CheckoutInformationPage extends BasePage {
 
     public CheckoutOverviewPage clickContinue() {
         click(continueButton);
+        CheckoutOverviewPage overviewPage = new CheckoutOverviewPage(driver);
+        overviewPage.waitUntilOpened();
         return new CheckoutOverviewPage(driver);
     }
 

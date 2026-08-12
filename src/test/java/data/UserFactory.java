@@ -17,7 +17,7 @@ public class UserFactory {
 
     public static User getUserWithWrongPassword() {
         return new User(TestDataReader.get("standard.username"),
-                TestDataReader.get("wrong_password"));
+                TestDataReader.get("wrong.password"));
     }
 
     public static User getUserWithMissingUsername() {

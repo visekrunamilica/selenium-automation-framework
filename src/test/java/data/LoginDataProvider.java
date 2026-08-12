@@ -26,7 +26,6 @@ public class LoginDataProvider {
                                 ErrorMessage.NO_USERNAME
                         )
                 }
-
         };
     }
 }

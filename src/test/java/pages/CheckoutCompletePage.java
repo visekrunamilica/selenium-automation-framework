@@ -12,12 +12,8 @@ public class CheckoutCompletePage extends BasePage {
         super(driver);
     }
 
-    public String getPageTitle() {
-        return getText(pageTitle);
-    }
-
     public boolean isPageOpened() {
-        return getPageTitle().equals("Checkout: Complete");
+        return isPageTitle(pageTitle,"Checkout: Complete");
     }
 
     public boolean isOrderCompleted() {
