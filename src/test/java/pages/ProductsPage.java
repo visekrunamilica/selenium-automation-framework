@@ -33,7 +33,7 @@ public class ProductsPage extends BasePage {
     }
 
     public boolean isPageOpened() {
-        return isPageTitle(pageTitle,"Products");
+        return isPageTitle(pageTitle, "Products");
     }
 
     public void addProductToCart(Product product) {

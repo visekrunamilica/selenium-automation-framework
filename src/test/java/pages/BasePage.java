@@ -5,13 +5,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import utils.LoggerUtils;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import utils.LoggerUtils;
 
 public class BasePage {
 
@@ -39,7 +38,7 @@ public class BasePage {
     }
 
     protected String getText(By locator) {
-        log.info("Getting text from element: {}",locator);
+        log.info("Getting text from element: {}", locator);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
     }
 

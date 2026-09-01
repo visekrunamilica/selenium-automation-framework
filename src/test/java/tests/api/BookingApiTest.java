@@ -1,23 +1,25 @@
 package tests.api;
 
-import io.restassured.http.ContentType;
+import api.AuthClient;
+import api.BookingClient;
+import base.BaseApiTest;
+import config.ConfigReader;
 import io.restassured.response.Response;
-import models.Booking;
-import models.BookingDates;
-import models.CreateBookingResponse;
+import models.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
+public class BookingApiTest extends BaseApiTest {
 
-public class BookingApiTest {
+    BookingClient bookingClient = new BookingClient();
+    AuthClient authClient = new AuthClient();
 
     @Test
     public void getBookingsReturnsSuccessfulResponse() {
 
-        Response response = given().baseUri("https://restful-booker.herokuapp.com").when().get("/booking");
+        Response response = bookingClient.getBookings();
         List<Integer> bookingIds = response.jsonPath().getList("bookingid");
 
         Assert.assertFalse(bookingIds.isEmpty());
@@ -27,13 +29,13 @@ public class BookingApiTest {
     @Test
     public void getBookingByIdReturnsSuccessfulResponse() {
 
-        Response response = given().baseUri("https://restful-booker.herokuapp.com").when().get("/booking");
+        Response response = bookingClient.getBookings();
 
         List<Integer> bookingIds = response.jsonPath().getList("bookingid");
 
         Integer bookingId = bookingIds.get(0);
 
-        Response bookingResponse = given().baseUri("https://restful-booker.herokuapp.com").pathParam("id", bookingId).when().get("/booking/{id}");
+        Response bookingResponse = bookingClient.getBookingById(bookingId);
 
         Assert.assertEquals(bookingResponse.getStatusCode(), 200);
 
@@ -54,7 +56,7 @@ public class BookingApiTest {
 
         Booking booking = new Booking("Milica", "Test", 150, true, dates, "Breakfast");
 
-        Response response = given().baseUri("https://restful-booker.herokuapp.com").contentType(ContentType.JSON).body(booking).when().post("/booking");
+        Response response = bookingClient.createBooking(booking);
         Assert.assertEquals(response.getStatusCode(), 200);
 
         CreateBookingResponse createBookingResponse = response.as(CreateBookingResponse.class);
@@ -62,7 +64,7 @@ public class BookingApiTest {
         Assert.assertEquals(createBookingResponse.getBooking().getFirstName(), booking.getFirstName());
         Assert.assertEquals(createBookingResponse.getBooking().getLastName(), booking.getLastName());
 
-        Response getResponse = given().baseUri("https://restful-booker.herokuapp.com").pathParam("id", bookingId).when().get("/booking/{id}");
+        Response getResponse = bookingClient.getBookingById(bookingId);
         Assert.assertEquals(getResponse.getStatusCode(), 200);
         Booking actualBooking = getResponse.as(Booking.class);
         Assert.assertEquals(actualBooking.getFirstName(), booking.getFirstName());
@@ -72,5 +74,74 @@ public class BookingApiTest {
         Assert.assertEquals(actualBooking.getBookingDates().getCheckin(), booking.getBookingDates().getCheckin());
         Assert.assertEquals(actualBooking.getBookingDates().getCheckout(), booking.getBookingDates().getCheckout());
         Assert.assertEquals(actualBooking.getAdditionalNeeds(), booking.getAdditionalNeeds());
+    }
+    @Test
+    public void userCanUpdateBooking() {
+
+        Booking originalBooking = new Booking(
+                "Milica",
+                "Test",
+                150,
+                true,
+                new BookingDates("2026-09-10", "2026-09-15"),
+                "Breakfast"
+        );
+
+        Response createResponse = bookingClient.createBooking(originalBooking);
+
+        CreateBookingResponse created =
+                createResponse.as(CreateBookingResponse.class);
+
+        int bookingId = created.getBookingId();
+
+        AuthRequest authRequest = new AuthRequest(
+                ConfigReader.get("apiUsername"),
+                ConfigReader.get("apiPassword")
+        );
+
+        Response authResponse = authClient.authenticate(authRequest);
+
+        AuthResponse auth =
+                authResponse.as(AuthResponse.class);
+
+        String token = auth.getToken();
+
+        Booking updatedBooking = new Booking(
+                "Milica",
+                "Updated",
+                250,
+                false,
+                new BookingDates("2026-10-01", "2026-10-05"),
+                "Dinner"
+        );
+
+        Response updateResponse =
+                bookingClient.updateBooking(bookingId, token, updatedBooking);
+
+        Assert.assertEquals(updateResponse.getStatusCode(), 200);
+
+        Response getResponse = bookingClient.getBookingById(bookingId);
+
+        Assert.assertEquals(getResponse.getStatusCode(), 200);
+
+        Booking actualBooking = getResponse.as(Booking.class);
+
+        Assert.assertEquals(actualBooking.getFirstName(), updatedBooking.getFirstName());
+        Assert.assertEquals(actualBooking.getLastName(), updatedBooking.getLastName());
+        Assert.assertEquals(actualBooking.getTotalPrice(), updatedBooking.getTotalPrice());
+        Assert.assertEquals(actualBooking.getDepositPaid(), updatedBooking.getDepositPaid());
+        Assert.assertEquals(
+                actualBooking.getBookingDates().getCheckin(),
+                updatedBooking.getBookingDates().getCheckin()
+        );
+        Assert.assertEquals(
+                actualBooking.getBookingDates().getCheckout(),
+                updatedBooking.getBookingDates().getCheckout()
+        );
+        Assert.assertEquals(
+                actualBooking.getAdditionalNeeds(),
+                updatedBooking.getAdditionalNeeds()
+        );
+
     }
 }

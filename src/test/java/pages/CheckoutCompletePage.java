@@ -13,7 +13,7 @@ public class CheckoutCompletePage extends BasePage {
     }
 
     public boolean isPageOpened() {
-        return isPageTitle(pageTitle,"Checkout: Complete");
+        return isPageTitle(pageTitle, "Checkout: Complete");
     }
 
     public boolean isOrderCompleted() {

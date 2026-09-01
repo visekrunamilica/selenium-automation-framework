@@ -46,6 +46,7 @@ public class CheckoutInformationPage extends BasePage {
     public void checkoutAttempt(CheckoutInfo info) {
         enterCheckoutInfo(info);
         click(continueButton);
+        waitUntilVisible(errorMessage);
     }
 
     public boolean hasErrorMessage(ErrorMessage message) {

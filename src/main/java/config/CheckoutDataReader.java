@@ -10,7 +10,7 @@ public class CheckoutDataReader {
     static {
         try {
             FileInputStream file =
-                    new FileInputStream("src/main/resources/checkoutdata.properties");
+                    new FileInputStream("src/test/resources/checkoutdata.properties");
 
             properties = new Properties();
             properties.load(file);

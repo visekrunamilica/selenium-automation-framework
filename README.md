@@ -2,7 +2,8 @@
 
 A UI test automation framework built with Java, Selenium WebDriver, TestNG and Maven using the Page Object Model (POM).
 
-The project is created as a learning and portfolio project with a focus on clean architecture, maintainability and reusable test components.
+The project is created as a learning and portfolio project with a focus on clean architecture, maintainability and
+reusable test components.
 
 ---
 

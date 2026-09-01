@@ -11,7 +11,7 @@ public class TestDataReader {
     static {
         try {
             FileInputStream file =
-                    new FileInputStream("src/main/resources/testdata.properties");
+                    new FileInputStream("src/test/resources/testdata.properties");
 
             properties = new Properties();
             properties.load(file);

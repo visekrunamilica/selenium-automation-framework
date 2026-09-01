@@ -18,7 +18,8 @@ public class CheckoutOverviewPage extends BasePage {
     }
 
     public CheckoutCompletePage clickFinish() {
-        click(finishButton);waitForUrlContains("checkout-complete");
+        click(finishButton);
+        waitForUrlContains("checkout-complete");
         return new CheckoutCompletePage(driver);
     }
 

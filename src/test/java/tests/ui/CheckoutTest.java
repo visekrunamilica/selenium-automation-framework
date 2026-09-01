@@ -1,6 +1,7 @@
 package tests.ui;
 
 import base.BaseTest;
+import base.DriverFactory;
 import constants.ErrorMessage;
 import data.CheckoutDataProvider;
 import data.CheckoutFactory;
@@ -44,6 +45,19 @@ public class CheckoutTest extends BaseTest {
     public void userCannotCompleteCheckout(CheckoutTestData testData) {
         CheckoutInformationPage checkoutInfoPage = goToCheckoutInformationPage();
         checkoutInfoPage.checkoutAttempt(testData.getCheckoutInfo());
+        System.out.println(
+                "URL AFTER CONTINUE: " +
+                        DriverFactory.getDriver().getCurrentUrl()
+        );
+
+        System.out.println("FIRST: [" +
+                testData.getCheckoutInfo().getFirstName() + "]");
+
+        System.out.println("LAST: [" +
+                testData.getCheckoutInfo().getLastName() + "]");
+
+        System.out.println("POSTAL: [" +
+                testData.getCheckoutInfo().getPostalCode() + "]");
         Assert.assertTrue(checkoutInfoPage.hasErrorMessage(testData.getErrorMessage()));
     }
 }
