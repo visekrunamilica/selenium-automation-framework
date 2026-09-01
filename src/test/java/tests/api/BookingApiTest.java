@@ -9,7 +9,9 @@ import models.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BookingApiTest extends BaseApiTest {
 
@@ -143,5 +145,143 @@ public class BookingApiTest extends BaseApiTest {
                 updatedBooking.getAdditionalNeeds()
         );
 
+    }
+    @Test
+    public void userCannotUpdateBookingWithInvalidToken() {
+
+        Booking booking = new Booking(
+                "Milica",
+                "Test",
+                150,
+                true,
+                new BookingDates("2026-09-10", "2026-09-15"),
+                "Breakfast"
+        );
+
+        Response createResponse = bookingClient.createBooking(booking);
+
+        CreateBookingResponse created =
+                createResponse.as(CreateBookingResponse.class);
+
+        int bookingId = created.getBookingId();
+
+        Booking updatedBooking = new Booking(
+                "Milica",
+                "Updated",
+                250,
+                false,
+                new BookingDates("2026-10-01", "2026-10-05"),
+                "Dinner"
+        );
+
+        Response updateResponse = bookingClient.updateBooking(
+                bookingId,
+                "invalid-token",
+                updatedBooking
+        );
+
+        Assert.assertEquals(updateResponse.getStatusCode(), 403);
+    }
+
+    @Test
+    public void getBookingWithInvalidIdReturnsNotFound() {
+
+        Response response = bookingClient.getBookingById(99999999);
+
+        Assert.assertEquals(response.getStatusCode(), 404);
+    }
+
+    @Test
+    public void userCanPartiallyUpdateBooking() {
+
+        Booking originalBooking = new Booking(
+                "Milica",
+                "Test",
+                150,
+                true,
+                new BookingDates("2026-09-10", "2026-09-15"),
+                "Breakfast"
+        );
+
+        Response createResponse =
+                bookingClient.createBooking(originalBooking);
+
+        Assert.assertEquals(createResponse.getStatusCode(), 200);
+
+        CreateBookingResponse created =
+                createResponse.as(CreateBookingResponse.class);
+
+        int bookingId = created.getBookingId();
+
+        AuthRequest authRequest = new AuthRequest(
+                ConfigReader.get("apiUsername"),
+                ConfigReader.get("apiPassword")
+        );
+
+        Response authResponse =
+                authClient.authenticate(authRequest);
+
+        Assert.assertEquals(authResponse.getStatusCode(), 200);
+
+        AuthResponse auth =
+                authResponse.as(AuthResponse.class);
+
+        String token = auth.getToken();
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("firstname", "UpdatedName");
+        updates.put("lastname", "UpdatedSurname");
+
+        Response patchResponse =
+                bookingClient.partialUpdateBooking(
+                        bookingId,
+                        token,
+                        updates
+                );
+
+        Assert.assertEquals(patchResponse.getStatusCode(), 200);
+
+        Response getResponse =
+                bookingClient.getBookingById(bookingId);
+
+        Assert.assertEquals(getResponse.getStatusCode(), 200);
+
+        Booking actualBooking =
+                getResponse.as(Booking.class);
+
+        Assert.assertEquals(
+                actualBooking.getFirstName(),
+                "UpdatedName"
+        );
+
+        Assert.assertEquals(
+                actualBooking.getLastName(),
+                "UpdatedSurname"
+        );
+
+        Assert.assertEquals(
+                actualBooking.getTotalPrice(),
+                originalBooking.getTotalPrice()
+        );
+
+        Assert.assertEquals(
+                actualBooking.getDepositPaid(),
+                originalBooking.getDepositPaid()
+        );
+
+        Assert.assertEquals(
+                actualBooking.getBookingDates().getCheckin(),
+                originalBooking.getBookingDates().getCheckin()
+        );
+
+        Assert.assertEquals(
+                actualBooking.getBookingDates().getCheckout(),
+                originalBooking.getBookingDates().getCheckout()
+        );
+
+        Assert.assertEquals(
+                actualBooking.getAdditionalNeeds(),
+                originalBooking.getAdditionalNeeds()
+        );
     }
 }
